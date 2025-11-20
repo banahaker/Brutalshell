@@ -19,8 +19,8 @@ struct config {
 };
 
 int connect_daemon( struct config );
-char *restrict get_session ( int ) __attribute__((malloc));
-int send_daemon( int method, char *restrict session, int fd, char *restrict, ssize_t );
+int get_session ( int );
+int send_daemon( int method, int fd, char *restrict, ssize_t );
 
 int read_pty( void );
 int set_pty( void ); /* raw pty */

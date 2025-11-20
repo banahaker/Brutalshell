@@ -9,10 +9,11 @@
 #define SESSION_ID_LEN 32
 #endif
 
-char *restrict get_session( int fd ){
+int get_session( int fd ){
 
-	register char *restrict ret = NULL;
+	register int ret = -1;
 	static const char *restrict request = "NEW_SESSION_ID";
+	register char *restrict buf;
 
 	if ( fd < 0 ){
 		return ret;
@@ -22,15 +23,17 @@ char *restrict get_session( int fd ){
 		return ret;
 	}
 
-	ret = malloc( SESSION_ID_LEN + 1 );
-	memset( ret, 0, SESSION_ID_LEN );
+	buf = malloc( SESSION_ID_LEN + 1 );
+	memset( buf, 0, SESSION_ID_LEN );
 
-	if ( read( fd, ret, SESSION_ID_LEN ) != SESSION_ID_LEN ){
-		free( ret );
-		return NULL;
+	if ( read( fd, buf, SESSION_ID_LEN ) != SESSION_ID_LEN ){
+		free( buf );
+		return ret;
 	}
 
-	setenv( "BSH_TERM_SESSION", ret, 1 );
+	ret = setenv( "BSH_TERM_SESSION", buf, 1 );
+
+	free( buf );
 
 	return ret;
 }

@@ -43,7 +43,6 @@ signed main( int argc, char **argv ){
 	register char *restrict child_pty_name;
 
 	register int daemon_fd;
-	register char *restrict session_id = NULL;
 
 	register pid_t pid;
 
@@ -140,9 +139,7 @@ signed main( int argc, char **argv ){
 		goto ONERR;
 	}
 
-	session_id = get_session( daemon_fd );
-
-	if ( !session_id ){
+	if ( !get_session( daemon_fd ) ){
 		logerr( "Failed to get session id\n", 21 );
 		kill( pid, SIGTERM );
 		waitpid( pid, NULL, 0 );
@@ -183,7 +180,7 @@ signed main( int argc, char **argv ){
 			rlen = read( ( *( fds + 1 ) ).fd, buf, BUFLEN );
 			if ( rlen <= 0 ) break;
 			write( ( *( fds + 0 ) ).fd, buf, rlen ); /* write back for terminal user */
-			send_daemon( cfg.daemon_method, session_id, ( *( fds + 2 ) ).fd, buf, rlen );
+			send_daemon( cfg.daemon_method, ( *( fds + 2 ) ).fd, buf, rlen );
 		}
 
 		if ( ( *( fds + 2 ) ).revents & POLLIN ){
@@ -194,8 +191,6 @@ signed main( int argc, char **argv ){
 	}
 
 	close( daemon_fd );
-
-	free( session_id );
 
 	free( buf );
 
