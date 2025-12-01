@@ -103,6 +103,9 @@ signed main( int argc, char **argv ){
 	if ( !pid ){
 		close( master );
 
+		free( cfg.desc );
+		cfg.desc = NULL;
+
 		if ( setsid() < 0 ){
 			logerr( "Failed to setsid\n", 18 );
 
@@ -131,6 +134,8 @@ signed main( int argc, char **argv ){
 	set_pty();
 
 	daemon_fd = connect_daemon( cfg );
+	free( cfg.desc );
+	cfg.desc = NULL;
 
 	if ( daemon_fd < 0 ){
 		logerr( "Failed to connect the daemon\n", 29 );

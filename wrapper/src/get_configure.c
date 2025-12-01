@@ -20,6 +20,10 @@
 #define BSH_CONFIGPATH "/etc/brutalshell/config.conf"
 #endif
 
+#ifndef BSH_DEFAULT_DAEMON_PATH
+#define BSH_DEFAULT_DAEMON_PATH "/var/run/bsh/bsh.socket"
+#endif
+
 struct config _get_yaml( void *, struct config );
 
 struct config get_configure( int argc, char **restrict argv ){
@@ -84,6 +88,11 @@ struct config get_configure( int argc, char **restrict argv ){
 
 		fclose( file );
 
+		if ( !cfg.desc ){
+			cfg.daemon_method = 0;
+			cfg.desc = strdup( BSH_DEFAULT_DAEMON_PATH );
+		}
+
 	}
 
 	return cfg;
@@ -130,9 +139,9 @@ struct config _get_yaml( void *f, struct config cfg ){
 
 				} else {
 
-					if ( !strcmp( k, "method" ) ){
+					if ( k && !strcmp( k, "method" ) ){
 						cfg.daemon_method = atoi( v );
-					} else if ( !strcmp( k, "path" ) ){
+					} else if ( k && !strcmp( k, "path" ) ){
 						cfg.desc = strdup( v );
 						cfg.len = strlen( v );
 					}
