@@ -171,7 +171,7 @@ struct config _get_yaml( void *f, struct config cfg ){
 					fprintf( stderr, "VAL: %s\n", v );
 #					endif
 
-					if ( is_val && is_seq ){
+					if ( is_seq ){
 						if ( is_arg ){
 
 							/* PUSH */
@@ -182,33 +182,33 @@ struct config _get_yaml( void *f, struct config cfg ){
 
 							seq_len++;
 						}
+					} else if ( k && !strcmp( k, "method" ) ){
+						cfg.daemon_method = atoi( v );
+						is_val = 0;
+					} else if ( k && !strcmp( k, "path" ) ){
+						cfg.desc = strdup( v );
+						cfg.len = strlen( v );
+						is_val = 0;
 					} else {
-						if ( k && !strcmp( k, "method" ) ){
-							cfg.daemon_method = atoi( v );
-						} else if ( k && !strcmp( k, "path" ) ){
-							cfg.desc = strdup( v );
-							cfg.len = strlen( v );
-						}
+						is_val = 0;
 					}
 				}
 
 				break;
 			case YAML_SEQUENCE_START_EVENT:
-			case YAML_SEQUENCE_END_EVENT:
-				break;
-			case YAML_MAPPING_START_EVENT:
 				is_seq = 1;
-				seq_len = 0;
-				is_val = 0;
+				is_val = 1;
 #				ifdef DBG
-				fprintf( stderr, "MAP START\n" );
+				fprintf( stderr, "SEQ START\n" );
 #				endif
 				break;
-			case YAML_MAPPING_END_EVENT:
+			case YAML_SEQUENCE_END_EVENT:
+				is_val = 0;
+				is_seq = 0;
 #				ifdef DBG
-				fprintf( stderr, "MAP END\n" );
+				fprintf( stderr, "SEQ END\n" );
 #				endif
-				if ( is_seq ){
+				if ( seq_len && arg_root ){
 					if ( is_arg ){
 						cfg.argv = malloc( sizeof( *cfg.argv ) * ( seq_len + 1 ) );
 						memset( cfg.argv, 0, sizeof( *cfg.argv ) * ( seq_len + 1 ) );
@@ -222,8 +222,19 @@ struct config _get_yaml( void *f, struct config cfg ){
 							free( tmp );
 						}
 					}
+					seq_len = 0;
 				}
-				is_seq = 0;
+				break;
+			case YAML_MAPPING_START_EVENT:
+				is_val = 0;
+#				ifdef DBG
+				fprintf( stderr, "MAP START\n" );
+#				endif
+				break;
+			case YAML_MAPPING_END_EVENT:
+#				ifdef DBG
+				fprintf( stderr, "MAP END\n" );
+#				endif
 				break;
 
 			case YAML_STREAM_END_EVENT:
