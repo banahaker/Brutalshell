@@ -8,18 +8,16 @@ and a prompt. It then POSTs the vLLM-style body directly to the chosen
 upstream endpoint and prints the response.
 """
 
-proxy_host = "http://100.68.65.78:8887"
-
 def build_body(prompt: str):
     # Minimal chat-style body compatible with many vLLM endpoints
     return {"messages": [{"role": "user", "content": prompt}]}
 
 
-def completions(prompt: str):
+def completions(prompt: str, host: str):
     path = "chat/completions"
     body = build_body(prompt)
-    base = proxy_host
-    url = base.rstrip("/") + "/" + path.lstrip("/")
+
+    url = host.rstrip("/") + "/" + path.lstrip("/")
 
     try:
         with httpx.Client(timeout=120.0) as client:
