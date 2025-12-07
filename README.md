@@ -47,7 +47,7 @@ cd ..
 
 To execute wrapper + daemon, it's recommended to use tmux.
 
-on first tmux pane, run the daemon:
+On first tmux pane, run the daemon:
 
 ```bash
 uv run src/main.py
