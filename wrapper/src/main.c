@@ -12,7 +12,10 @@
 #include <sys/poll.h>
 #include <fcntl.h>
 
+#ifdef __linux__
 #include <alloca.h>
+#endif
+
 #include <signal.h>
 
 #include "wrapper.h"
