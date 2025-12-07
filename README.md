@@ -56,5 +56,5 @@ uv run src/main.py
 On second tmux pane, run the wrapper:
 
 ```bash
-./wrapper/build/brutalshell_wrapper
+./wrapper/build/bsh
 ```
