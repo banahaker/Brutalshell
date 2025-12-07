@@ -21,7 +21,7 @@ def llm(buffer: Buffer, host: str):
     time.sleep(1)
     if(buffer.last_update > start_time): return
     
-    suffix = vllm.completions(buffer.data.decode())
+    suffix = vllm.completions(buffer.data.decode(), host)
     if(buffer.last_update > start_time): return
     
     print(suffix)
