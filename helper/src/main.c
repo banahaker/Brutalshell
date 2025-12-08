@@ -39,14 +39,6 @@ int main(int argc, char *argv[]) {
         goto cleanup;
     }
 
-    char helper_session_buf[256];
-    if (get_session(cfg.daemon_fd, helper_session_buf, sizeof(helper_session_buf)) < 0) {
-        print_error("failed to get session ID from daemon");
-        ret = EXIT_FAILURE;
-        goto cleanup;
-    }
-    strncpy(cfg.helper_session, helper_session_buf, sizeof(cfg.helper_session) - 1);
-
     char *wrapper_session_env = getenv("BSH_TERM_SESSION");
     if (wrapper_session_env) {
         strncpy(cfg.wrapper_session, wrapper_session_env, sizeof(cfg.wrapper_session) - 1);
@@ -55,7 +47,7 @@ int main(int argc, char *argv[]) {
     }
 
     req_len =
-        strlen(helper_session_buf) + 1 + strlen(wrapper_session_env) + 1;
+        strlen(wrapper_session_env) + 1;
 
     for (int i = 1; i < argc; i++) {
       req_len += strlen(argv[i]) + 1;
@@ -68,9 +60,6 @@ int main(int argc, char *argv[]) {
       ret = EXIT_FAILURE;
       goto cleanup;
     }
-
-    strcpy(request_msg, helper_session_buf);
-    strcat(request_msg, UNIT_SEP);
 
     strcat(request_msg, wrapper_session_env);
     strcat(request_msg, UNIT_SEP);
