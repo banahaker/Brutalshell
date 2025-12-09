@@ -16,10 +16,8 @@ int logfd = STDERR_FILENO;
 int main(int argc, char *argv[]) {
     struct helper_config cfg;
     struct daemon_response *resp = NULL;
-    char helper_session[256];
     char *request_msg = NULL;
     size_t req_len = 0;
-    int i, confirm = 0;
     int ret = EXIT_SUCCESS;
 
     memset(&cfg, 0, sizeof(struct helper_config));
@@ -75,6 +73,8 @@ int main(int argc, char *argv[]) {
         ret = EXIT_FAILURE;
         goto cleanup;
     }
+
+    // TODO: Receive response from daemon
 
 cleanup:
     if (request_msg) {
