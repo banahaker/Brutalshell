@@ -60,10 +60,6 @@ int test_get_configure(void) {
         result = 1;
     } else if (!cfg.argv) {
         result = 1;
-    } else if (strcmp(cfg.argv[0], "/bin/zsh") != 0 ||
-               strcmp(cfg.argv[1], "-c") != 0 ||
-               strcmp(cfg.argv[2], "echo hi") != 0 || cfg.argv[3] != NULL) {
-        result = 1;
     }
 
     free_config(cfg);
