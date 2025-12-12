@@ -2,7 +2,7 @@
 #include "wrapper.h"
 
 #include <string.h>
-#include <sys/poll.h>
+#include <poll.h>
 
 #include <errno.h>
 

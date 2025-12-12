@@ -1,7 +1,7 @@
 
 #include "wrapper.h"
 
-#include <sys/poll.h>
+#include <poll.h>
 #include <string.h>
 
 #include <errno.h>

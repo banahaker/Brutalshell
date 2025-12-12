@@ -9,7 +9,7 @@
 
 #include <sys/wait.h>
 #include <sys/ioctl.h>
-#include <sys/poll.h>
+#include <poll.h>
 #include <fcntl.h>
 
 #ifdef __GNUC__
